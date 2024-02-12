@@ -80,7 +80,7 @@ def extract_keystrokes(keystrokes, signal, windows):
         non_silent_indices = np.where(np.abs(extracted_keystrokes[i]) > 0.01)[0]
         start_index = non_silent_indices[0] if non_silent_indices.size else 0
         if start_index > 0:
-            start_index -= 250
+            start_index -= 441 # 10ms (0.01s * 44100 = 441) before the first non-silent index
         extracted_keystrokes[i] = extracted_keystrokes[i][start_index:] 
 
     return extracted_keystrokes
@@ -109,7 +109,7 @@ def plot_extracted_keystrokes(extracted_keystrokes, samplerate):
 
 window_size = 10000
 hop_size = window_size // 2
-threshold = 0.3
+threshold = 0.1
 file_path = 'Recordings\B.wav'
 
 signal, samplerate = load_recording(file_path)
