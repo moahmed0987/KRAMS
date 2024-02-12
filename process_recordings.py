@@ -72,10 +72,9 @@ def plot_keystrokes(keystrokes):
 def extract_keystrokes(keystrokes, signal, windows):
     extracted_keystrokes = []
     for start, end in keystrokes:
-        start_time = int((start / windows) * len(signal))
-        end_time = int((end / windows) * len(signal))
-        extracted_keystrokes.append(signal[start_time:end_time])
-
+        start_sample = int((start / windows) * len(signal))
+        end_sample = int((end / windows) * len(signal))
+        extracted_keystrokes.append(signal[start_sample:end_sample])
     for i in range(len(extracted_keystrokes)):
         non_silent_indices = np.where(np.abs(extracted_keystrokes[i]) > 0.01)[0]
         start_index = non_silent_indices[0] if non_silent_indices.size else 0
