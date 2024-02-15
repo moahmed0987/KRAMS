@@ -63,16 +63,30 @@ def plot_keystrokes(keystrokes):
 
 def extract_keystrokes(keystrokes, signal, windows):
     extracted_keystrokes = []
+    # extract keystrokes from the signal
     for start, end in keystrokes:
         start_sample = int((start / windows) * len(signal))
         end_sample = int((end / windows) * len(signal))
+        # add 8820 samples (200ms) to the start and end to make sure the keystroke is fully captured
+        start_sample = start_sample - 8820 if start_sample - 8820 > 0 else 0
+        end_sample = end_sample + 8820 if end_sample + 8820 < len(signal) else len(signal)
         extracted_keystrokes.append(signal[start_sample:end_sample])
+
+    # remove all silence from the start of each keystroke, and add 10ms of silence to the start
     for i in range(len(extracted_keystrokes)):
         non_silent_indices = np.where(np.abs(extracted_keystrokes[i]) > 0.01)[0]
         start_index = non_silent_indices[0] if non_silent_indices.size else 0
-        if start_index > 0:
+        if start_index > 440:
             start_index -= 441 # 10ms (0.01s * 44100 = 441) before the first non-silent index
-        extracted_keystrokes[i] = extracted_keystrokes[i][start_index:] 
+        extracted_keystrokes[i] = extracted_keystrokes[i][start_index:]
+
+    # remove silence from the end of each keystroke, and add 10ms of silence to the end
+    for i in range(len(extracted_keystrokes)):
+        non_silent_indices = np.where(np.abs(extracted_keystrokes[i]) > 0.01)[0]
+        end_index = non_silent_indices[-1] if non_silent_indices.size else len(extracted_keystrokes[i])
+        if len(extracted_keystrokes[i]) - end_index > 440:
+            end_index += 441 # 10ms (0.01s * 44100 = 441) after the last non-silent index 
+        extracted_keystrokes[i] = extracted_keystrokes[i][:end_index]
 
     return extracted_keystrokes
 
@@ -84,7 +98,7 @@ def plot_extracted_keystrokes(extracted_keystrokes, samplerate):
     for i, keystroke in enumerate(extracted_keystrokes):
         row = i // 4
         col = i % 4
-        librosa.display.waveshow(keystroke, sr=samplerate, color='#1f77b4', ax=axs[row, col], max_points=100)
+        librosa.display.waveshow(keystroke, sr=samplerate, color='#1f77b4', ax=axs[row, col], max_points=1000)
         axs[row, col].set_title(f'Keystroke {i+1}')
         axs[row, col].set_ylabel('Amplitude')
 
