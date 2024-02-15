@@ -1,23 +1,19 @@
+import librosa
 import matplotlib.pyplot as plt
 import numpy as np
-import soundfile as sf
 from scipy.fft import fft
 
 
 # Load recording of keystroke training data
 def load_recording(file_path):
-    signal, samplerate = sf.read(file_path)
-    if signal.ndim > 1:
-        signal = signal.mean(axis=1)
+    signal, samplerate = librosa.load(file_path, sr=None)
     return signal, samplerate
 
 # Plot the waveform of the recording
 def plot_waveform(signal, samplerate):
     plt.figure(figsize=(10, 4))  # Set the figure size
-    time = [float(i)/samplerate for i in range(len(signal))]  # Calculate time from samples
-    plt.plot(time, signal)
+    librosa.display.waveshow(signal, sr=samplerate, color='#1f77b4', axis="s")
     plt.title('Waveform of Recording')
-    plt.xlabel('Time [s]')
     plt.ylabel('Amplitude')
     plt.show()
 
@@ -35,13 +31,9 @@ def process_keystrokes(signal, window_size, hop_size):
 # Plot the energy and threshold to visualize keystrokes
 def plot_energy(energy, samplerate, threshold,window_size, hop_size):
     plt.figure(figsize=(10, 6))
-    num_windows = (len(signal) - window_size) // hop_size + 1
-    midpoints_in_samples = np.arange(window_size / 2, len(signal) - window_size / 2, hop_size)[:num_windows]
-    time = midpoints_in_samples / samplerate
 
-    plt.plot(time, energy, label='Normalized Energy')
+    librosa.display.waveshow(energy, sr=samplerate, color='#1f77b4', axis="s", label='Normalised Energy')
     plt.axhline(y=threshold, color='r', linestyle='--', label='Threshold')
-    plt.xlabel('Time')
     plt.ylabel('Energy')
     plt.legend()
     plt.title('Keystroke Detection')
@@ -92,10 +84,8 @@ def plot_extracted_keystrokes(extracted_keystrokes, samplerate):
     for i, keystroke in enumerate(extracted_keystrokes):
         row = i // 4
         col = i % 4
-        time = [float(i)/samplerate for i in range(len(keystroke))]
-        axs[row, col].plot(time, keystroke)
+        librosa.display.waveshow(keystroke, sr=samplerate, color='#1f77b4', ax=axs[row, col], max_points=100)
         axs[row, col].set_title(f'Keystroke {i+1}')
-        axs[row, col].set_xlabel('Time [s]')
         axs[row, col].set_ylabel('Amplitude')
 
     for i in range(n_keystrokes, n_rows * 4):
@@ -106,16 +96,17 @@ def plot_extracted_keystrokes(extracted_keystrokes, samplerate):
     plt.tight_layout()
     plt.show()
 
-window_size = 10000
-hop_size = window_size // 2
-threshold = 0.1
-file_path = 'Recordings\B.wav'
+if __name__ == '__main__':
+    window_size = 10000
+    hop_size = window_size // 2
+    threshold = 0.1
+    file_path = 'Recordings\A.wav'
 
-signal, samplerate = load_recording(file_path)
-plot_waveform(signal, samplerate)
-energy = process_keystrokes(signal, window_size, hop_size)
-plot_energy(energy, samplerate, threshold, window_size, hop_size)
-keystrokes = isolate_keystrokes(energy, threshold)
-plot_keystrokes(keystrokes)
-extracted_keystrokes = extract_keystrokes(keystrokes, signal, len(energy))
-plot_extracted_keystrokes(extracted_keystrokes, samplerate)
+    signal, samplerate = load_recording(file_path)
+    plot_waveform(signal, samplerate)
+    energy = process_keystrokes(signal, window_size, hop_size)
+    plot_energy(energy, samplerate, threshold, window_size, hop_size)
+    keystrokes = isolate_keystrokes(energy, threshold)
+    plot_keystrokes(keystrokes)
+    extracted_keystrokes = extract_keystrokes(keystrokes, signal, len(energy))
+    plot_extracted_keystrokes(extracted_keystrokes, samplerate)
