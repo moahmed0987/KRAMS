@@ -99,8 +99,12 @@ def plot_extracted_keystrokes(extracted_keystrokes, samplerate):
         col = i % 5
         librosa.display.waveshow(keystroke, sr=samplerate, color='#1f77b4', ax=axs[row, col], max_points=1000)
         axs[row, col].set_title(f'Keystroke {i+1}')
-        axs[row, col].set_ylabel('Amplitude')
+        axs[row, col].set_xlabel("")
+        axs[row, col].set_ylabel("")
 
+    fig.suptitle('Extracted Keystrokes')
+    fig.supxlabel('Time (s)')
+    fig.supylabel('Amplitude')
     plt.show()
 
 if __name__ == '__main__':
