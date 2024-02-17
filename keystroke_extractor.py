@@ -92,22 +92,15 @@ def extract_keystrokes(keystrokes, signal, windows):
 
 def plot_extracted_keystrokes(extracted_keystrokes, samplerate):
     n_keystrokes = len(extracted_keystrokes)
-    n_rows = (n_keystrokes + 3) // 4
-    fig, axs = plt.subplots(n_rows, 4, figsize=(15, 4*n_rows))
+    fig, axs = plt.subplots(5, 5, figsize=(15, 20), constrained_layout=True)
 
     for i, keystroke in enumerate(extracted_keystrokes):
-        row = i // 4
-        col = i % 4
+        row = i // 5
+        col = i % 5
         librosa.display.waveshow(keystroke, sr=samplerate, color='#1f77b4', ax=axs[row, col], max_points=1000)
         axs[row, col].set_title(f'Keystroke {i+1}')
         axs[row, col].set_ylabel('Amplitude')
 
-    for i in range(n_keystrokes, n_rows * 4):
-        row = i // 4
-        col = i % 4
-        axs[row, col].axis('off')
-
-    plt.tight_layout()
     plt.show()
 
 if __name__ == '__main__':
