@@ -7,6 +7,9 @@ def mel_spectrogram(signal, samplerate):
     mel_spectrogram = librosa.feature.melspectrogram(y=signal, sr=samplerate)
     return mel_spectrogram
 
+def mel_spectrograms(signals, samplerate):
+    return [mel_spectrogram(signal, samplerate) for signal in signals]
+
 def display_mel_spectrograms(mel_spectrograms, samplerate, window_size, hop_size):
     fig, axs = plt.subplots(5, 5, figsize=(15, 15), constrained_layout=True)
     for i, mel_spectrogram in enumerate(mel_spectrograms):
