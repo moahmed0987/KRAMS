@@ -91,7 +91,6 @@ def extract_keystrokes(keystrokes, signal, windows):
     return extracted_keystrokes
 
 def plot_extracted_keystrokes(extracted_keystrokes, samplerate):
-    n_keystrokes = len(extracted_keystrokes)
     fig, axs = plt.subplots(5, 5, figsize=(15, 20), constrained_layout=True)
 
     for i, keystroke in enumerate(extracted_keystrokes):
