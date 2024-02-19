@@ -4,7 +4,7 @@ import keystroke_extractor as ke
 import librosa
 
 def mel_spectrogram(signal, samplerate):
-    mel_spectrogram = librosa.feature.melspectrogram(y=signal, sr=samplerate)
+    mel_spectrogram = librosa.feature.melspectrogram(y=signal, sr=samplerate, win_length=len(signal)/64, hop_length=int((len(signal)/64)/2))
     return mel_spectrogram
 
 def mel_spectrograms(signals, samplerate):
