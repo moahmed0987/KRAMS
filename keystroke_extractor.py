@@ -30,7 +30,7 @@ def process_keystrokes(signal, window_size, hop_size):
     return energy
 
 # Plot the energy and threshold to visualize keystrokes
-def plot_energy(energy, samplerate, threshold,window_size, hop_size):
+def plot_energy(energy, samplerate, threshold, window_size, hop_size):
     plt.figure(figsize=(10, 6))
     num_windows = (len(signal) - window_size) // hop_size + 1
     midpoints_in_samples = np.arange(window_size / 2, len(signal) - window_size / 2, hop_size)[:num_windows]
@@ -66,9 +66,17 @@ def find_keystroke_boundaries(peaks, signal, n_windows, before, after):
     return keystroke_boundaries
 
 def plot_keystroke_boundaries(keystrokes):
-    for start, end in keystrokes:
-        plt.axvline(x=start, color='g', linestyle='-', linewidth=0.5)
-        plt.axvline(x=end, color='m', linestyle='-', linewidth=0.5)
+    plt.figure(figsize=(10, 4))
+    librosa.display.waveshow(signal, sr=samplerate, color='#1f77b4', axis="s", label='Waveform')
+    keystrokes = [(start / 44100, end / 44100) for start, end in keystrokes]
+    for i, (start, end) in enumerate(keystrokes):
+        if i == 0:
+            plt.axvline(x=start, color='g', linestyle='-', linewidth=0.5, label='Start')
+            plt.axvline(x=end, color='m', linestyle='-', linewidth=0.5, label='End')
+        else:
+            plt.axvline(x=start, color='g', linestyle='-', linewidth=0.5)
+            plt.axvline(x=end, color='m', linestyle='-', linewidth=0.5)
+    plt.legend()
     plt.show()
 
 def isolate_keystrokes(keystroke_boundaries, signal):
