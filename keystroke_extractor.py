@@ -31,8 +31,11 @@ def process_keystrokes(signal, window_size, hop_size):
 # Plot the energy and threshold to visualize keystrokes
 def plot_energy(energy, samplerate, threshold,window_size, hop_size):
     plt.figure(figsize=(10, 6))
+    num_windows = (len(signal) - window_size) // hop_size + 1
+    midpoints_in_samples = np.arange(window_size / 2, len(signal) - window_size / 2, hop_size)[:num_windows]
+    time = midpoints_in_samples / samplerate
 
-    librosa.display.waveshow(energy, sr=samplerate, color='#1f77b4', axis="s", label='Normalised Energy')
+    plt.plot(time, energy, label='Normalised Energy')
     plt.axhline(y=threshold, color='r', linestyle='--', label='Threshold')
     plt.ylabel('Energy')
     plt.legend()
