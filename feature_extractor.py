@@ -31,10 +31,13 @@ if __name__ == "__main__":
     hop_size = 225
     threshold = 0.1
     file_path = "Recordings\A.wav"
+    before = int(0.2 * 14400)
+    after = int(0.8 * 14400)
+
     signal, samplerate = ke.load_recording(file_path)
     energy = ke.process_keystrokes(signal, window_size, hop_size)
     peaks = ke.isolate_keystroke_peaks(energy)
-    keystroke_boundaries = ke.find_keystroke_boundaries(peaks, signal, len(energy), 2851, 11549)
+    keystroke_boundaries = ke.find_keystroke_boundaries(peaks, signal, len(energy), before, after)
     extracted_keystrokes = ke.isolate_keystrokes(keystroke_boundaries, signal)
     print(f"Extracted {len(extracted_keystrokes)} keystrokes")
     ke.plot_extracted_keystrokes(extracted_keystrokes, samplerate)
