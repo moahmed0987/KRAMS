@@ -11,9 +11,9 @@ def load_recording(file_path):
 
 def plot_waveform(signal, samplerate):
     plt.figure(figsize=(10, 4))  # Set the figure size
-    librosa.display.waveshow(signal, sr=samplerate, color='#1f77b4', axis="s")
-    plt.title('Waveform of Recording')
-    plt.ylabel('Amplitude')
+    librosa.display.waveshow(signal, sr=samplerate, color="#1f77b4", axis="s")
+    plt.title("Waveform of Recording")
+    plt.ylabel("Amplitude")
     plt.show()
 
 def process_keystrokes(signal, window_size, hop_size):
@@ -32,11 +32,11 @@ def plot_energy(energy, samplerate, threshold, window_size, hop_size):
     midpoints_in_samples = np.arange(window_size / 2, len(signal) - window_size / 2, hop_size)[:num_windows]
     time = midpoints_in_samples / samplerate
 
-    plt.plot(time, energy, label='Normalised Energy')
-    plt.axhline(y=threshold, color='r', linestyle='--', label='Threshold')
-    plt.ylabel('Energy')
+    plt.plot(time, energy, label="Normalised Energy")
+    plt.axhline(y=threshold, color="r", linestyle="--", label="Threshold")
+    plt.ylabel("Energy")
     plt.legend()
-    plt.title('Keystroke Detection')
+    plt.title("Keystroke Detection")
     plt.show()
 
 def isolate_keystroke_peaks(energy):
@@ -48,7 +48,7 @@ def isolate_keystroke_peaks(energy):
 
 def plot_peaks(peaks, energy):
     plt.figure(figsize=(10, 6))
-    plt.plot(peaks, energy[peaks], "x", color='r', label='Peaks')
+    plt.plot(peaks, energy[peaks], "x", color="r", label="Peaks")
     plt.plot(energy)
     plt.show()
 
@@ -63,15 +63,15 @@ def find_keystroke_boundaries(peaks, signal, n_windows, before, after):
 
 def plot_keystroke_boundaries(keystrokes):
     plt.figure(figsize=(10, 4))
-    librosa.display.waveshow(signal, sr=samplerate, color='#1f77b4', axis="s", label='Waveform')
+    librosa.display.waveshow(signal, sr=samplerate, color="#1f77b4", axis="s", label="Waveform")
     keystrokes = [(start / 44100, end / 44100) for start, end in keystrokes]
     for i, (start, end) in enumerate(keystrokes):
         if i == 0:
-            plt.axvline(x=start, color='g', linestyle='-', linewidth=0.5, label='Start')
-            plt.axvline(x=end, color='m', linestyle='-', linewidth=0.5, label='End')
+            plt.axvline(x=start, color="g", linestyle="-", linewidth=0.5, label="Start")
+            plt.axvline(x=end, color="m", linestyle="-", linewidth=0.5, label="End")
         else:
-            plt.axvline(x=start, color='g', linestyle='-', linewidth=0.5)
-            plt.axvline(x=end, color='m', linestyle='-', linewidth=0.5)
+            plt.axvline(x=start, color="g", linestyle="-", linewidth=0.5)
+            plt.axvline(x=end, color="m", linestyle="-", linewidth=0.5)
     plt.legend()
     plt.show()
 
@@ -87,22 +87,22 @@ def plot_extracted_keystrokes(extracted_keystrokes, samplerate):
     for i, keystroke in enumerate(extracted_keystrokes):
         row = i // 5
         col = i % 5
-        librosa.display.waveshow(keystroke, sr=samplerate, color='#1f77b4', ax=axs[row, col], max_points=1000)
+        librosa.display.waveshow(keystroke, sr=samplerate, color="#1f77b4", ax=axs[row, col], max_points=1000)
         axs[row, col].xaxis.set_major_locator(plt.MaxNLocator(5))
-        axs[row, col].set_title(f'Keystroke {i+1}')
+        axs[row, col].set_title(f"Keystroke {i+1}")
         axs[row, col].set_xlabel("")
         axs[row, col].set_ylabel("")
 
-    fig.suptitle('Extracted Keystrokes')
-    fig.supxlabel('Time (s)')
-    fig.supylabel('Amplitude')
+    fig.suptitle("Extracted Keystrokes")
+    fig.supxlabel("Time (s)")
+    fig.supylabel("Amplitude")
     plt.show()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     window_size = 1024
     hop_size = 225
     threshold = 0.1
-    file_path = 'Recordings\A.wav'
+    file_path = "Recordings\A.wav"
 
     signal, samplerate = load_recording(file_path)
     plot_waveform(signal, samplerate)
