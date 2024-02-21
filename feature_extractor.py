@@ -3,8 +3,8 @@ import numpy as np
 import keystroke_extractor as ke
 import librosa
 
-def mel_spectrogram(signal, samplerate):
-    mel_spectrogram = librosa.feature.melspectrogram(y=signal, sr=samplerate, win_length=len(signal)/64, hop_length=int((len(signal)/64)/2))
+def mel_spectrogram(signal, samplerate, window_size, hop_size):
+    mel_spectrogram = librosa.feature.melspectrogram(y=signal, sr=samplerate, n_mels=64, win_length=window_size, hop_length=hop_size)
     return mel_spectrogram
 
 def mel_spectrograms(signals, samplerate):
@@ -27,16 +27,18 @@ def display_mel_spectrograms(mel_spectrograms, samplerate, window_size, hop_size
     plt.show()
 
 if __name__ == "__main__":
-    window_size = 10000
-    hop_size = window_size // 2
+    window_size = 1024
+    hop_size = 225
     threshold = 0.1
     file_path = 'Recordings\A.wav'
     signal, samplerate = ke.load_recording(file_path)
     energy = ke.process_keystrokes(signal, window_size, hop_size)
-    keystrokes = ke.isolate_keystrokes(energy, threshold)
-    extracted_keystrokes = ke.extract_keystrokes(keystrokes, signal, len(energy))
+    peaks = ke.isolate_keystroke_peaks(energy)
+    keystroke_boundaries = ke.find_keystroke_boundaries(peaks, signal, len(energy), 2851, 11549)
+    extracted_keystrokes = ke.isolate_keystrokes(keystroke_boundaries, signal)
     print(f"Extracted {len(extracted_keystrokes)} keystrokes")
-    mel_spectrograms = [mel_spectrogram(keystroke, 44100) for keystroke in extracted_keystrokes]
+    mel_spectrograms = [mel_spectrogram(keystroke, samplerate, window_size, hop_size) for keystroke in extracted_keystrokes]
     print(f"Computed {len(mel_spectrograms)} mel spectrograms")
     print(mel_spectrograms)
+    ke.plot_extracted_keystrokes(extracted_keystrokes, samplerate)
     display_mel_spectrograms(mel_spectrograms, samplerate, window_size, hop_size)
