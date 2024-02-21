@@ -5,12 +5,10 @@ from scipy.fft import fft
 import scipy.signal
 
 
-# Load recording of keystroke training data
 def load_recording(file_path):
     signal, samplerate = librosa.load(file_path, sr=None)
     return signal, samplerate
 
-# Plot the waveform of the recording
 def plot_waveform(signal, samplerate):
     plt.figure(figsize=(10, 4))  # Set the figure size
     librosa.display.waveshow(signal, sr=samplerate, color='#1f77b4', axis="s")
@@ -18,7 +16,6 @@ def plot_waveform(signal, samplerate):
     plt.ylabel('Amplitude')
     plt.show()
 
-# Convert the signal to the frequency domain and normalise energy
 def process_keystrokes(signal, window_size, hop_size):
     energy = []
     for i in range(0, len(signal) - window_size, hop_size):
@@ -29,7 +26,6 @@ def process_keystrokes(signal, window_size, hop_size):
     energy = (energy - np.min(energy)) / (np.max(energy) - np.min(energy))
     return energy
 
-# Plot the energy and threshold to visualize keystrokes
 def plot_energy(energy, samplerate, threshold, window_size, hop_size):
     plt.figure(figsize=(10, 6))
     num_windows = (len(signal) - window_size) // hop_size + 1
