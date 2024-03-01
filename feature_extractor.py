@@ -102,7 +102,6 @@ def display_mel_spectrograms(mel_spectrograms, samplerate, window_size, hop_size
 if __name__ == "__main__":
     window_size = 1024
     hop_size = 225
-    threshold = 0.1
     file_path = "Recordings\A.wav"
     before = int(0.2 * 14400)
     after = int(0.8 * 14400)
