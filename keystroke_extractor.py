@@ -44,9 +44,17 @@ def isolate_keystroke_peaks(energy):
         peaks, _ = scipy.signal.find_peaks(energy, prominence=i)
         if len(peaks) == 25:
             break
+    if len(peaks) != 25:
+        for i in [x / 100.0 for x in range(1, 101, 1)]:
+            for j in range(1, 14400):
+                peaks, _ = scipy.signal.find_peaks(energy, prominence=i, distance=j)
+                if len(peaks) == 25:
+                    break
+            if len(peaks) == 25:    
+                break
     return peaks
 
-def plot_peaks(peaks, energy):
+def plot_peaks(peaks, energy, signal, window_size, hop_size, samplerate):
     num_windows = (len(signal) - window_size) // hop_size + 1
     midpoints_in_samples = np.arange(window_size / 2, len(signal) - window_size / 2, hop_size)[:num_windows]
     time = midpoints_in_samples / samplerate
@@ -117,7 +125,7 @@ if __name__ == "__main__":
     energy = process_keystrokes(signal, window_size, hop_size)
     plot_energy(energy, samplerate, window_size, hop_size)
     peaks = isolate_keystroke_peaks(energy)
-    plot_peaks(peaks, energy)
+    plot_peaks(peaks, energy, signal, window_size, hop_size, samplerate)
     keystroke_boundaries = find_keystroke_boundaries(peaks, signal, len(energy), before, after)
     plot_keystroke_boundaries(keystroke_boundaries)
     extracted_keystrokes = isolate_keystrokes(keystroke_boundaries, signal)
