@@ -15,7 +15,7 @@ def process_recordings(file_paths, window_size, hop_size, before, after):
     df_mel_spectrograms = []
     for i, file_path in enumerate(file_paths):
         print(f"Processing {file_path}")
-        augmented_mel_spectrograms = data_processing_pipeline(file_path, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER)
+        augmented_mel_spectrograms = data_processing_pipeline(file_path, window_size, hop_size, before, after)
         for mel_spectrogram in augmented_mel_spectrograms:
             df_relative_paths.append(file_path)
             df_labels.append(chr(65 + i))
