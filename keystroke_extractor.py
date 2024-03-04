@@ -114,19 +114,19 @@ def plot_extracted_keystrokes(extracted_keystrokes, samplerate):
     plt.show()
 
 if __name__ == "__main__":
-    window_size = 1024
-    hop_size = 225
-    file_path = "Recordings\A.wav"
-    before = int(0.2 * 14400)
-    after = int(0.8 * 14400)
+    WINDOW_SIZE = 1024
+    HOP_SIZE = 225
+    BEFORE = int(0.2 * 14400)
+    AFTER = int(0.8 * 14400)
+    FILE_PATH = "Recordings/A.wav"
 
-    signal, samplerate = load_recording(file_path)
+    signal, samplerate = load_recording(FILE_PATH)
     plot_waveform(signal, samplerate)
-    energy = process_keystrokes(signal, window_size, hop_size)
-    plot_energy(energy, samplerate, window_size, hop_size)
+    energy = process_keystrokes(signal, WINDOW_SIZE, HOP_SIZE)
+    plot_energy(energy, samplerate, WINDOW_SIZE, HOP_SIZE)
     peaks = isolate_keystroke_peaks(energy)
-    plot_peaks(peaks, energy, signal, window_size, hop_size, samplerate)
-    keystroke_boundaries = find_keystroke_boundaries(peaks, signal, len(energy), before, after)
+    plot_peaks(peaks, energy, signal, WINDOW_SIZE, HOP_SIZE, samplerate)
+    keystroke_boundaries = find_keystroke_boundaries(peaks, signal, len(energy), BEFORE, AFTER)
     plot_keystroke_boundaries(keystroke_boundaries)
     extracted_keystrokes = isolate_keystrokes(keystroke_boundaries, signal)
     plot_extracted_keystrokes(extracted_keystrokes, samplerate)

@@ -100,16 +100,16 @@ def display_mel_spectrograms(mel_spectrograms, samplerate, window_size, hop_size
     plt.show()
 
 if __name__ == "__main__":
-    window_size = 1024
-    hop_size = 225
-    file_path = "Recordings\A.wav"
-    before = int(0.2 * 14400)
-    after = int(0.8 * 14400)
+    WINDOW_SIZE = 1024
+    HOP_SIZE = 225
+    BEFORE = int(0.2 * 14400)
+    AFTER = int(0.8 * 14400)
+    FILE_PATH = "Recordings/A.wav"
 
-    signal, samplerate = ke.load_recording(file_path)
-    energy = ke.process_keystrokes(signal, window_size, hop_size)
+    signal, samplerate = ke.load_recording(FILE_PATH)
+    energy = ke.process_keystrokes(signal, WINDOW_SIZE, HOP_SIZE)
     peaks = ke.isolate_keystroke_peaks(energy)
-    keystroke_boundaries = ke.find_keystroke_boundaries(peaks, signal, len(energy), before, after)
+    keystroke_boundaries = ke.find_keystroke_boundaries(peaks, signal, len(energy), BEFORE, AFTER)
 
     extracted_keystrokes = ke.isolate_keystrokes(keystroke_boundaries, signal)
     print(f"Extracted Keystrokes: {len(extracted_keystrokes)}")
@@ -119,10 +119,10 @@ if __name__ == "__main__":
     print(f"Augmented Keystrokes: {len(augmented_keystrokes)}")
     plot_augmented_keystrokes(augmented_keystrokes, samplerate)
 
-    mel_spectrograms = [generate_mel_spectrogram(keystroke, samplerate, window_size, hop_size) for keystroke in augmented_keystrokes]
+    mel_spectrograms = [generate_mel_spectrogram(keystroke, samplerate, WINDOW_SIZE, HOP_SIZE) for keystroke in augmented_keystrokes]
     print(f"Mel Spectrograms: {len(mel_spectrograms)}")
-    display_mel_spectrograms(mel_spectrograms, samplerate, window_size, hop_size)
+    display_mel_spectrograms(mel_spectrograms, samplerate, WINDOW_SIZE, HOP_SIZE)
 
     augmented_mel_spectrograms = mel_spectrogram_data_augmentation(mel_spectrograms)
     print(f"Augmented Mel Spectrograms: {len(augmented_mel_spectrograms)}")
-    display_mel_spectrograms(augmented_mel_spectrograms, samplerate, window_size, hop_size)
+    display_mel_spectrograms(augmented_mel_spectrograms, samplerate, WINDOW_SIZE, HOP_SIZE)
