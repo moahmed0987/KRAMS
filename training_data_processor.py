@@ -45,6 +45,9 @@ def to_csv(spectrogram_df, csv_file_path):
     with np.printoptions(threshold=np.inf):
         spectrogram_df.to_csv(csv_file_path, index=False)
 
+def from_csv(csv_file_path):
+    return pd.read_csv(csv_file_path)
+
 if __name__ == "__main__":
     WINDOW_SIZE = 1024
     HOP_SIZE = 225
