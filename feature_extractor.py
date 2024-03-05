@@ -28,7 +28,7 @@ def mel_spectrogram_data_augmentation(mel_spectrograms):
         augmented_mel_spectrograms.append(mel_spectrogram)
         time_masked = time_mask(torch.tensor(mel_spectrogram))
         freq_masked = freq_mask(time_masked)
-        augmented_mel_spectrograms.append(freq_masked)
+        augmented_mel_spectrograms.append(freq_masked.numpy())
     return augmented_mel_spectrograms
 
 def plot_augmented_keystrokes(extracted_keystrokes, samplerate):
