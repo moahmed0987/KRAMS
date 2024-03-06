@@ -12,6 +12,7 @@ def get_file_paths(directory):
 def process_recordings(file_paths, window_size, hop_size, before, after):
     df_relative_paths = []
     df_labels = []
+    df_targets = []
     df_mel_spectrograms = []
     for i, file_path in enumerate(file_paths):
         print(f"Processing {file_path}")
@@ -19,8 +20,9 @@ def process_recordings(file_paths, window_size, hop_size, before, after):
         for mel_spectrogram in augmented_mel_spectrograms:
             df_relative_paths.append(file_path)
             df_labels.append(chr(65 + i))
+            df_targets.append(i)
             df_mel_spectrograms.append(mel_spectrogram)
-    return df_relative_paths, df_labels, df_mel_spectrograms
+    return df_relative_paths, df_labels, df_targets, df_mel_spectrograms
 
 def data_processing_pipeline(file_path, window_size, hop_size, before, after):
     signal, samplerate = ke.load_recording(file_path)
@@ -33,11 +35,12 @@ def data_processing_pipeline(file_path, window_size, hop_size, before, after):
     augmented_mel_spectrograms = fe.mel_spectrogram_data_augmentation(mel_spectrograms)
     return augmented_mel_spectrograms
 
-def to_dataframe(df_relative_paths, df_labels, df_mel_spectrograms):
-    df = pd.DataFrame(columns=["id", "relative_path", "label", "mel_spectrogram"])
+def to_dataframe(df_relative_paths, df_labels, df_targets, df_mel_spectrograms):
+    df = pd.DataFrame(columns=["id", "relative_path", "label", "target", "mel_spectrogram"])
     df["id"] = range(1, len(df_relative_paths) + 1)
     df["relative_path"] = df_relative_paths
     df["label"] = df_labels
+    df["target"] = df_targets
     df["mel_spectrogram"] = df_mel_spectrograms
     return df
 
@@ -55,6 +58,6 @@ if __name__ == "__main__":
     AFTER = int(0.8 * 14400)
     DIRECTORY = "Recordings"
     file_paths = get_file_paths(DIRECTORY)
-    df_relative_paths, df_labels, df_mel_spectrograms = process_recordings(file_paths, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER)
-    df = to_dataframe(df_relative_paths, df_labels, df_mel_spectrograms)
+    df_relative_paths, df_labels, df_targets, df_mel_spectrograms = process_recordings(file_paths, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER)
+    df = to_dataframe(df_relative_paths, df_labels, df_targets, df_mel_spectrograms)
     to_csv(df, "keystroke_data.csv")
