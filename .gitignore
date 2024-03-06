@@ -2,3 +2,4 @@ venv/
 Recordings/
 __pycache__/
 .vscode/
+keystroke_data.csv
