@@ -100,7 +100,7 @@ def display_mel_spectrograms(mel_spectrograms, samplerate, window_size, hop_size
     plt.show()
 
 if __name__ == "__main__":
-    WINDOW_SIZE = 1024
+    WINDOW_SIZE = 1023
     HOP_SIZE = 225
     BEFORE = int(0.2 * 14400)
     AFTER = int(0.8 * 14400)
