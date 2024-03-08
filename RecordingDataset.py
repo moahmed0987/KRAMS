@@ -16,4 +16,10 @@ class RecordingDataset(Dataset):
         tensor_mel_spectrogram = torch.tensor(mel_spectrogram)
         tensor_target = torch.tensor(target)
         return tensor_mel_spectrogram, tensor_target
+    
+    def get_label(self, idx):
+        return self.df.iloc[idx, 2]
+    
+    def get_label_from_target(self, target):
+        return self.df[self.df['target'] == target].iloc[0, 2]
         

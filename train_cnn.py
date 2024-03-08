@@ -76,6 +76,7 @@ def test(model, device, test_loader, criterion):
     model.eval()
     running_loss = 0.0
     correct = 0
+    incorrect = []
     with torch.no_grad():
         for data, target in test_loader:
             data, target = data.to(device), target.to(device)
@@ -86,10 +87,23 @@ def test(model, device, test_loader, criterion):
             pred = output.argmax(dim=1, keepdim=True)
             correct += pred.eq(target.view_as(pred)).sum().item()
 
+            misclassified = (pred != target.view_as(pred)).squeeze()
+            for idx, is_misclassified in enumerate(misclassified):
+                if is_misclassified:
+                    incorrect.append((data[idx], target[idx], pred[idx]))
+
     test_loss = running_loss / len(test_loader.dataset)
     accuracy = 100. * correct / len(test_loader.dataset)
     print("\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n".format(
         test_loss, correct, len(test_loader.dataset), accuracy))
+
+    print("Misclassified samples:")
+    for data, target, pred in incorrect:
+        # print(f"Sample: {data.cpu().squeeze().numpy()}")
+        print(f"Target: {target.item()}, Predicted: {pred.item()}")
+        print(f"Target label: {test_dataset.get_label_from_target(target.item())}, Predicted label: {test_dataset.get_label_from_target(pred.item())}")
+        print("-" * 20)
+
     return test_loss
 
 def run():
