@@ -16,6 +16,7 @@ NUM_EPOCHS = 1100
 BATCH_SIZE = 16
 LEARNING_RATE = 0.0005
 CHECKPOINT_DIR = "Checkpoints"
+MODEL_DIR = "FinalModel"
 
 file_paths = tdp.get_file_paths("Recordings")
 df_relative_paths, df_labels, df_targets, df_mel_spectrograms = tdp.process_recordings(file_paths, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER)
@@ -135,6 +136,9 @@ def run():
                 }, checkpoint_path)
                 print(f"Checkpoint saved at epoch {epoch} with test loss {test_loss:.4f}")
 
+    os.makedirs(MODEL_DIR, exist_ok=True)
+    model_path = os.path.join(MODEL_DIR, "model.pth")
+    torch.save(model.state_dict(), model_path)
     print("train_losses: ", train_losses)
     print("test_losses: ", test_losses)
 
