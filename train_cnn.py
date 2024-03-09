@@ -1,5 +1,6 @@
 import os
 import random
+from datetime import datetime
 
 import torch
 import torch.nn as nn
@@ -15,10 +16,11 @@ AFTER = int(0.8 * 14400)
 NUM_EPOCHS = 1100
 BATCH_SIZE = 16
 LEARNING_RATE = 0.0005
+RECORDINGS_DIR = "Recordings"
 CHECKPOINT_DIR = "Checkpoints"
 MODEL_DIR = "FinalModel"
 
-file_paths = tdp.get_file_paths("Recordings")
+file_paths = tdp.get_file_paths(RECORDINGS_DIR)
 df_relative_paths, df_labels, df_targets, df_mel_spectrograms = tdp.process_recordings(file_paths, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER)
 df = tdp.to_dataframe(df_relative_paths, df_labels, df_targets, df_mel_spectrograms)
 
@@ -137,7 +139,7 @@ def run():
                 print(f"Checkpoint saved at epoch {epoch} with test loss {test_loss:.4f}")
 
     os.makedirs(MODEL_DIR, exist_ok=True)
-    model_path = os.path.join(MODEL_DIR, "model.pth")
+    model_path = os.path.join(MODEL_DIR, f"model_{datetime.now().strftime('%Y%m%d%H%M%S')}_{NUM_EPOCHS}_epochs.pth")
     torch.save(model.state_dict(), model_path)
     print("train_losses: ", train_losses)
     print("test_losses: ", test_losses)
