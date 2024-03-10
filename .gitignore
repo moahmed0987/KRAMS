@@ -1,6 +1,13 @@
-venv/
-Recordings/
+# Python related
 __pycache__/
+venv/
+
+# VS Code related
 .vscode/
+
+# Data files
 keystroke_data.csv
-Checkpoints/
+
+# Project related
+Recordings/
+Results/

@@ -5,6 +5,7 @@ from datetime import datetime
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from matplotlib import pyplot as plt
 
 import RecordingDataset
 import training_data_processor as tdp
@@ -14,11 +15,14 @@ HOP_SIZE = 225
 BEFORE = int(0.2 * 14400)
 AFTER = int(0.8 * 14400)
 NUM_EPOCHS = 1100
+EPOCHS_PER_CHECKPOINT = 10
 BATCH_SIZE = 16
 LEARNING_RATE = 0.0005
 RECORDINGS_DIR = "Recordings"
-CHECKPOINT_DIR = "Checkpoints"
-MODEL_DIR = "FinalModel"
+BASE_DIR = os.path.join("Results", datetime.now().strftime("%Y%m%d%H%M%S"))
+CHECKPOINT_DIR = os.path.join(BASE_DIR, "Checkpoints")
+MODEL_DIR = os.path.join(BASE_DIR, "Model")
+FIGURE_DIR = os.path.join(BASE_DIR, "Figures")
 
 file_paths = tdp.get_file_paths(RECORDINGS_DIR)
 df_relative_paths, df_labels, df_targets, df_mel_spectrograms = tdp.process_recordings(file_paths, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER)
@@ -68,7 +72,7 @@ def train(model, device, train_loader, optimiser, criterion, epoch):
         loss.backward()
         optimiser.step()
         running_loss += loss.item()
-        if batch_idx % 10 == 0:
+        if batch_idx % (len(train_loader) // 10) == 0:
             print("Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}".format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
                 100. * batch_idx / len(train_loader), loss.item()))
@@ -122,7 +126,7 @@ def run():
     for epoch in range(1, NUM_EPOCHS + 1):
         train_loss = train(model, device, train_loader, optimiser, criterion, epoch)
         train_losses.append(train_loss)
-        if epoch % 10 == 0:
+        if epoch % EPOCHS_PER_CHECKPOINT == 0:
             test_loss = test(model, device, test_loader, criterion)
             test_losses.append(test_loss)
 
@@ -139,8 +143,19 @@ def run():
                 print(f"Checkpoint saved at epoch {epoch} with test loss {test_loss:.4f}")
 
     os.makedirs(MODEL_DIR, exist_ok=True)
-    model_path = os.path.join(MODEL_DIR, f"model_{datetime.now().strftime('%Y%m%d%H%M%S')}_{NUM_EPOCHS}_epochs.pth")
+    model_path = os.path.join(MODEL_DIR, f"model.pth")
     torch.save(model.state_dict(), model_path)
+    print(f"Model saved at {model_path}")
+
+    plt.figure()
+    plt.plot(train_losses, label="Train Loss")
+    plt.plot([(i+1) * EPOCHS_PER_CHECKPOINT for i in range(len(test_losses))], test_losses, label="Test Loss")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.legend()
+    os.makedirs(FIGURE_DIR, exist_ok=True)
+    plt.savefig(os.path.join(FIGURE_DIR, f"loss.png"))
+    print(f"Loss plot saved at {os.path.join(FIGURE_DIR, 'loss.png')}")
     print("train_losses: ", train_losses)
     print("test_losses: ", test_losses)
 
