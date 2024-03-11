@@ -76,7 +76,7 @@ def find_keystroke_boundaries(peaks, signal, n_windows, before, after):
         keystroke_boundaries.append((start, end))
     return keystroke_boundaries
 
-def plot_keystroke_boundaries(keystrokes):
+def plot_keystroke_boundaries(keystrokes, signal, samplerate):
     plt.figure(figsize=(10, 4))
     librosa.display.waveshow(signal, sr=samplerate, color="#1f77b4", axis="s", label="Waveform")
     keystrokes = [(start / 44100, end / 44100) for start, end in keystrokes]
