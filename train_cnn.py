@@ -57,8 +57,8 @@ optimiser = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 criterion = torch.nn.CrossEntropyLoss()
 train_dataset = RecordingDataset.RecordingDataset(train_df, "Recordings")
 test_dataset = RecordingDataset.RecordingDataset(test_df, "Recordings")
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
-test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
+test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False, drop_last=True)
 
 def train(model, device, train_loader, optimiser, criterion, epoch):
     model.train()
