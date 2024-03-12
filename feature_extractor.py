@@ -62,7 +62,7 @@ def plot_augmented_keystrokes(extracted_keystrokes, samplerate):
     plt.show()
 
 def generate_mel_spectrogram(signal, samplerate, window_size, hop_size):
-    mel_spectrogram = librosa.feature.melspectrogram(y=signal, sr=samplerate, n_mels=64, win_length=window_size, hop_length=hop_size)
+    mel_spectrogram = librosa.feature.melspectrogram(y=signal, sr=samplerate, n_mels=64, n_fft=window_size, hop_length=hop_size)
     return mel_spectrogram
 
 def generate_mel_spectrograms(signals, samplerate):
