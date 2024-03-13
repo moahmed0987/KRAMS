@@ -1,3 +1,4 @@
+import os
 import librosa
 import matplotlib.pyplot as plt
 import numpy as np
@@ -41,17 +42,9 @@ def plot_energy(energy, samplerate, window_size, hop_size):
 
 def isolate_keystroke_peaks(energy):
     for i in [x / 100.0 for x in range(1, 101, 1)]:
-        peaks, _ = scipy.signal.find_peaks(energy, prominence=i)
+        peaks, _ = scipy.signal.find_peaks(energy, prominence=i, distance=100)
         if len(peaks) == 25:
             break
-    if len(peaks) != 25:
-        for i in [x / 100.0 for x in range(1, 101, 1)]:
-            for j in range(1, 14400):
-                peaks, _ = scipy.signal.find_peaks(energy, prominence=i, distance=j)
-                if len(peaks) == 25:
-                    break
-            if len(peaks) == 25:    
-                break
     return peaks
 
 def plot_peaks(peaks, energy, signal, window_size, hop_size, samplerate):
@@ -118,15 +111,16 @@ if __name__ == "__main__":
     HOP_SIZE = 225
     BEFORE = int(0.2 * 14400)
     AFTER = int(0.8 * 14400)
-    FILE_PATH = "Recordings/A.wav"
-
-    signal, samplerate = load_recording(FILE_PATH)
-    plot_waveform(signal, samplerate)
-    energy = process_keystrokes(signal, WINDOW_SIZE, HOP_SIZE)
-    plot_energy(energy, samplerate, WINDOW_SIZE, HOP_SIZE)
-    peaks = isolate_keystroke_peaks(energy)
-    plot_peaks(peaks, energy, signal, WINDOW_SIZE, HOP_SIZE, samplerate)
-    keystroke_boundaries = find_keystroke_boundaries(peaks, signal, len(energy), BEFORE, AFTER)
-    plot_keystroke_boundaries(keystroke_boundaries)
-    extracted_keystrokes = isolate_keystrokes(keystroke_boundaries, signal)
-    plot_extracted_keystrokes(extracted_keystrokes, samplerate)
+    RECORDING_DIR = "Recordings"
+    for i in range(0, 26):
+        FILE_PATH = os.path.join(RECORDING_DIR, chr(65 + i)+ ".wav")
+        signal, samplerate = load_recording(FILE_PATH)
+        plot_waveform(signal, samplerate)
+        energy = process_keystrokes(signal, WINDOW_SIZE, HOP_SIZE)
+        plot_energy(energy, samplerate, WINDOW_SIZE, HOP_SIZE)
+        peaks = isolate_keystroke_peaks(energy)
+        plot_peaks(peaks, energy, signal, WINDOW_SIZE, HOP_SIZE, samplerate)
+        keystroke_boundaries = find_keystroke_boundaries(peaks, signal, len(energy), BEFORE, AFTER)
+        plot_keystroke_boundaries(keystroke_boundaries, signal, samplerate)
+        extracted_keystrokes = isolate_keystrokes(keystroke_boundaries, signal)
+        plot_extracted_keystrokes(extracted_keystrokes, samplerate)
