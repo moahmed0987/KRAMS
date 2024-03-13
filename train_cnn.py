@@ -58,7 +58,7 @@ criterion = torch.nn.CrossEntropyLoss()
 train_dataset = RecordingDataset.RecordingDataset(train_df, "Recordings")
 test_dataset = RecordingDataset.RecordingDataset(test_df, "Recordings")
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
-test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False, drop_last=True)
+test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
 
 def train(model, device, train_loader, optimiser, criterion, epoch):
     model.train()
@@ -99,7 +99,7 @@ def test(model, device, test_loader, criterion):
                 if is_misclassified:
                     incorrect.append((data[idx], target[idx], pred[idx]))
 
-    test_loss = running_loss / len(test_loader.dataset)
+    test_loss = running_loss / len(test_loader)
     accuracy = 100. * correct / len(test_loader.dataset)
     print("\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n".format(
         test_loss, correct, len(test_loader.dataset), accuracy))
