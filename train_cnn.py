@@ -1,9 +1,9 @@
 import os
-import random
 from datetime import datetime
 
 import torch
 from matplotlib import pyplot as plt
+from torch.utils.data import random_split
 
 import RecordingDataset
 import training_data_processor as tdp
@@ -71,7 +71,7 @@ def test(model, device, test_loader, criterion):
     for data, target, pred in incorrect:
         # print(f"Sample: {data.cpu().squeeze().numpy()}")
         print(f"Target: {target.item()}, Predicted: {pred.item()}")
-        print(f"Target label: {test_loader.dataset.get_label_from_target(target.item())}, Predicted label: {test_loader.dataset.get_label_from_target(pred.item())}")
+        print(f"Target label: {test_loader.dataset.dataset.get_label_from_target(target.item())}, Predicted label: {test_loader.dataset.dataset.get_label_from_target(pred.item())}")
         print("-" * 20)
 
     return test_loss
@@ -81,18 +81,14 @@ def run():
     df_relative_paths, df_labels, df_targets, df_mel_spectrograms = tdp.process_recordings(file_paths, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER)
     df = tdp.to_dataframe(df_relative_paths, df_labels, df_targets, df_mel_spectrograms)
 
-    train_indices = random.sample(range(len(df)), int(0.8 * len(df)))
-    test_indices = list(set(range(len(df))) - set(train_indices))
-
-    train_df = df.iloc[train_indices]
-    test_df = df.iloc[test_indices]
-
     model = ConvNet(num_classes=26)
 
     optimiser = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
     criterion = torch.nn.CrossEntropyLoss()
-    train_dataset = RecordingDataset.RecordingDataset(train_df, "Recordings")
-    test_dataset = RecordingDataset.RecordingDataset(test_df, "Recordings")
+
+    dataset = RecordingDataset.RecordingDataset(df, "Recordings")
+    train_dataset, test_dataset = random_split(dataset, [0.8, 0.2])
+
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
 
