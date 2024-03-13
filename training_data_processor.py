@@ -52,7 +52,7 @@ def from_csv(csv_file_path):
     return pd.read_csv(csv_file_path)
 
 if __name__ == "__main__":
-    WINDOW_SIZE = 1024
+    WINDOW_SIZE = 1023
     HOP_SIZE = 225
     BEFORE = int(0.2 * 14400)
     AFTER = int(0.8 * 14400)
