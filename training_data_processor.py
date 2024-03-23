@@ -7,7 +7,7 @@ import feature_extractor as fe
 import keystroke_extractor as ke
 
 def get_file_paths(directory):
-    return [os.path.join(directory, file) for file in os.listdir(directory)]
+    return [os.path.join(directory, chr(65 + i) + ".wav") for i in range(26)]
 
 def process_recordings(file_paths, window_size, hop_size, before, after):
     df_relative_paths = []
@@ -54,10 +54,13 @@ def from_csv(csv_file_path):
 if __name__ == "__main__":
     WINDOW_SIZE = 1023
     HOP_SIZE = 225
-    BEFORE = int(0.2 * 14400)
-    AFTER = int(0.8 * 14400)
+    BEFORE = int(0.3 * 14400)
+    AFTER = int(0.7 * 14400)
     DIRECTORY = "Recordings"
     file_paths = get_file_paths(DIRECTORY)
     df_relative_paths, df_labels, df_targets, df_mel_spectrograms = process_recordings(file_paths, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER)
-    df = to_dataframe(df_relative_paths, df_labels, df_targets, df_mel_spectrograms)
-    to_csv(df, "keystroke_data.csv")
+    for ms in df_mel_spectrograms:
+        if ms.shape != (64, 64):
+            print(ms.shape)
+    # df = to_dataframe(df_relative_paths, df_labels, df_targets, df_mel_spectrograms)
+    # to_csv(df, "keystroke_data.csv")
