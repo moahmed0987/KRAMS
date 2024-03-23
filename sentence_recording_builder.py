@@ -32,5 +32,5 @@ def create_recording(sentence, file_path):
     return final_signal, samplerate
 
 if __name__ == "__main__":
-    sentence = "ThisIsATestSentence"
+    sentence = "ThisIsATestSentenceSample"
     create_recording(sentence, os.path.join("Recordings", sentence + ".wav"))
