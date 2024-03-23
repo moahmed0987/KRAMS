@@ -15,14 +15,14 @@ def signal_data_augmentation(signals):
     for signal in signals:
         augmented_signals.append(signal)
         if random() > 0.5:
-            augmented_signals.append(np.roll(signal, len(signal) // 10))
+            augmented_signals.append(np.roll(signal, int(random() * len(signal) * 0.1)))
         else:
-            augmented_signals.append(np.roll(signal, -len(signal) // 10))
+            augmented_signals.append(np.roll(signal, int(random() * -len(signal) * 0.1)))
     return augmented_signals
 
 def mel_spectrogram_data_augmentation(mel_spectrograms):
-    time_mask = T.TimeMasking(time_mask_param=len(mel_spectrograms[0]) // 10)
-    freq_mask = T.FrequencyMasking(freq_mask_param=len(mel_spectrograms[0]) // 10)
+    time_mask = T.TimeMasking(time_mask_param=len(mel_spectrograms[0]) / 10)
+    freq_mask = T.FrequencyMasking(freq_mask_param=len(mel_spectrograms[0]) / 10)
     augmented_mel_spectrograms = []
     for mel_spectrogram in mel_spectrograms:
         augmented_mel_spectrograms.append(mel_spectrogram)
@@ -102,27 +102,31 @@ def display_mel_spectrograms(mel_spectrograms, samplerate, window_size, hop_size
 if __name__ == "__main__":
     WINDOW_SIZE = 1023
     HOP_SIZE = 225
-    BEFORE = int(0.2 * 14400)
-    AFTER = int(0.8 * 14400)
-    FILE_PATH = "Recordings/A.wav"
+    BEFORE = int(0.3 * 14400)
+    AFTER = int(0.7 * 14400)
 
-    signal, samplerate = ke.load_recording(FILE_PATH)
-    energy = ke.process_keystrokes(signal, WINDOW_SIZE, HOP_SIZE)
-    peaks = ke.isolate_keystroke_peaks(energy)
-    keystroke_boundaries = ke.find_keystroke_boundaries(peaks, signal, len(energy), BEFORE, AFTER)
+    for i in range(0, 26):
+        FILE_PATH = f"Recordings/{chr(65 + i)}.wav"  
+        signal, samplerate = ke.load_recording(FILE_PATH)
+        energy = ke.process_keystrokes(signal, WINDOW_SIZE, HOP_SIZE)
+        peaks = ke.isolate_keystroke_peaks(energy)
+        keystroke_boundaries = ke.find_keystroke_boundaries(peaks, signal, len(energy), BEFORE, AFTER)
 
-    extracted_keystrokes = ke.isolate_keystrokes(keystroke_boundaries, signal)
-    print(f"Extracted Keystrokes: {len(extracted_keystrokes)}")
-    ke.plot_extracted_keystrokes(extracted_keystrokes, samplerate)
-    
-    augmented_keystrokes = signal_data_augmentation(extracted_keystrokes)
-    print(f"Augmented Keystrokes: {len(augmented_keystrokes)}")
-    plot_augmented_keystrokes(augmented_keystrokes, samplerate)
+        extracted_keystrokes = ke.isolate_keystrokes(keystroke_boundaries, signal)
+        print(f"Extracted Keystrokes: {len(extracted_keystrokes)}")
+        ke.plot_extracted_keystrokes(extracted_keystrokes, samplerate)
+        
+        augmented_keystrokes = signal_data_augmentation(extracted_keystrokes)
+        print(f"Augmented Keystrokes: {len(augmented_keystrokes)}")
+        plot_augmented_keystrokes(augmented_keystrokes, samplerate)
 
-    mel_spectrograms = [generate_mel_spectrogram(keystroke, samplerate, WINDOW_SIZE, HOP_SIZE) for keystroke in augmented_keystrokes]
-    print(f"Mel Spectrograms: {len(mel_spectrograms)}")
-    display_mel_spectrograms(mel_spectrograms, samplerate, WINDOW_SIZE, HOP_SIZE)
+        mel_spectrograms = [generate_mel_spectrogram(keystroke, samplerate, WINDOW_SIZE, HOP_SIZE) for keystroke in augmented_keystrokes]
+        print(f"Mel Spectrograms: {len(mel_spectrograms)}")
+        display_mel_spectrograms(mel_spectrograms, samplerate, WINDOW_SIZE, HOP_SIZE)
+        
+        # save one mel spectrogram to a file
+        # np.save("mel_spectrogram.npy", mel_spectrograms[28])
 
-    augmented_mel_spectrograms = mel_spectrogram_data_augmentation(mel_spectrograms)
-    print(f"Augmented Mel Spectrograms: {len(augmented_mel_spectrograms)}")
-    display_mel_spectrograms(augmented_mel_spectrograms, samplerate, WINDOW_SIZE, HOP_SIZE)
+        augmented_mel_spectrograms = mel_spectrogram_data_augmentation(mel_spectrograms)
+        print(f"Augmented Mel Spectrograms: {len(augmented_mel_spectrograms)}")
+        display_mel_spectrograms(augmented_mel_spectrograms, samplerate, WINDOW_SIZE, HOP_SIZE)
