@@ -64,8 +64,8 @@ def find_keystroke_boundaries(peaks, signal, n_windows, before, after):
     peaks = [int((peak / n_windows) * len(signal)) for peak in peaks]
     keystroke_boundaries = []
     for peak in peaks:
-        start = peak - before if peak - before > 0 else 0
-        end = peak + after if peak + after < len(signal) else len(signal)
+        start = peak - before
+        end = peak + after
         keystroke_boundaries.append((start, end))
     return keystroke_boundaries
 
@@ -86,7 +86,12 @@ def plot_keystroke_boundaries(keystrokes, signal, samplerate):
 def isolate_keystrokes(keystroke_boundaries, signal):
     keystrokes = []
     for start, end in keystroke_boundaries:
-        keystrokes.append(signal[start:end])
+        if start < 0:
+            keystrokes.append(np.pad(signal[:end], (abs(start), 0)))
+        elif end > len(signal):
+            keystrokes.append(np.pad(signal[start:], (0, end - len(signal))))
+        else:
+            keystrokes.append(signal[start:end])
     return keystrokes
 
 def plot_extracted_keystrokes(extracted_keystrokes, samplerate):
