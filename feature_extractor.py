@@ -26,9 +26,15 @@ def mel_spectrogram_data_augmentation(mel_spectrograms):
     augmented_mel_spectrograms = []
     for mel_spectrogram in mel_spectrograms:
         augmented_mel_spectrograms.append(mel_spectrogram)
+
         time_masked = time_mask(torch.tensor(mel_spectrogram))
-        freq_masked = freq_mask(time_masked)
+        augmented_mel_spectrograms.append(time_masked.numpy())
+
+        freq_masked = freq_mask(torch.tensor(mel_spectrogram))
         augmented_mel_spectrograms.append(freq_masked.numpy())
+
+        time_freq_masked = freq_mask(time_masked)
+        augmented_mel_spectrograms.append(time_freq_masked.numpy())
     return augmented_mel_spectrograms
 
 def plot_augmented_keystrokes(extracted_keystrokes, samplerate):
@@ -40,7 +46,7 @@ def plot_augmented_keystrokes(extracted_keystrokes, samplerate):
         if cols - rows > 1:
             rows += 1
             cols = rows
-    
+
     fig, axs = plt.subplots(rows, cols, figsize=(15, 15), constrained_layout=True)
     for i, keystroke in enumerate(extracted_keystrokes):
         row = i // cols
