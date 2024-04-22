@@ -27,7 +27,7 @@ def process_keystrokes(signal, window_size, hop_size):
     energy = (energy - np.min(energy)) / (np.max(energy) - np.min(energy))
     return energy
 
-def plot_energy(energy, samplerate, window_size, hop_size):
+def plot_energy(energy, samplerate, window_size, hop_size, signal):
     plt.figure(figsize=(10, 6))
     num_windows = (len(signal) - window_size) // hop_size + 1
     midpoints_in_samples = np.arange(window_size / 2, len(signal) - window_size / 2, hop_size)[:num_windows]
