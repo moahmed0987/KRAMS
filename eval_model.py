@@ -62,7 +62,7 @@ def check_accuracy(sample_text, output_text):
     for i in range(len(sample_text)):
         if output_text[i] == sample_text[i]:
             correct += 1
-    print("Accuracy:", correct / len(sample_text), "%")
+    print("Accuracy:", (correct / len(sample_text)) * 100, "%")
 
 
 if __name__ == "__main__":
