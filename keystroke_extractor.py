@@ -122,7 +122,7 @@ if __name__ == "__main__":
         signal, samplerate = load_recording(FILE_PATH)
         plot_waveform(signal, samplerate)
         energy = process_keystrokes(signal, WINDOW_SIZE, HOP_SIZE)
-        plot_energy(energy, samplerate, WINDOW_SIZE, HOP_SIZE)
+        plot_energy(energy, samplerate, WINDOW_SIZE, HOP_SIZE, signal)
         peaks = isolate_keystroke_peaks(energy)
         plot_peaks(peaks, energy, signal, WINDOW_SIZE, HOP_SIZE, samplerate)
         keystroke_boundaries = find_keystroke_boundaries(peaks, signal, len(energy), BEFORE, AFTER)
