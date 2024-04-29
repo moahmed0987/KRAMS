@@ -1,5 +1,6 @@
 import os
 
+import scipy.signal
 import torch
 
 import feature_extractor as fe
@@ -27,10 +28,19 @@ def load_and_prepare_model(model_path, device):
     model.eval()
     return model
 
+def isolate_keystroke_peaks(energy, num_peaks, signal, samplerate):
+    for i in [x / 100.0 for x in range(1, 101, 1)]:
+        peaks, _ = scipy.signal.find_peaks(energy, prominence=i, distance=100)
+        if len(peaks) == num_peaks:
+            break
+    ke.plot_peaks(peaks, energy, signal, WINDOW_SIZE, HOP_SIZE, samplerate)
+    print(len(peaks))
+    return peaks
+
 def extract_keystrokes_and_features(sentence, recording_path, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER):
     signal, samplerate = ke.load_recording(recording_path)
     energy = ke.process_keystrokes(signal, WINDOW_SIZE, HOP_SIZE)
-    peaks = ke.isolate_keystroke_peaks(energy)
+    peaks = isolate_keystroke_peaks(energy, len(sentence), signal, samplerate)
     keystroke_boundaries = ke.find_keystroke_boundaries(peaks, signal, len(energy), BEFORE, AFTER)
     extracted_keystrokes = ke.isolate_keystrokes(keystroke_boundaries, signal)
     mel_spectrograms = [fe.generate_mel_spectrogram(keystroke, samplerate, WINDOW_SIZE, HOP_SIZE) for keystroke in extracted_keystrokes]
