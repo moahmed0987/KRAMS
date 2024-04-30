@@ -8,6 +8,7 @@ import torch
 import torchaudio.transforms as T
 
 import keystroke_extractor as ke
+import matplotlib.ticker as ticker
 
 
 def signal_data_augmentation(signals):
@@ -73,7 +74,9 @@ def display_mel_spectrograms(mel_spectrograms, samplerate, window_size, hop_size
         col = i % cols
         mel_show = librosa.display.specshow(librosa.power_to_db(mel_spectrogram, ref=np.max), y_axis="mel", x_axis="time", ax=axs[row, col], win_length=window_size, hop_length=hop_size, sr=samplerate)
         axs[row, col].set_title("Mel spectrogram " + str(i+1))
-        axs[row, col].xaxis.set_major_locator(plt.MaxNLocator(5))
+        axs[row, col].xaxis.set_major_formatter(ticker.StrMethodFormatter("{x:.1f}"))
+        axs[row, col].xaxis.set_major_locator(plt.MaxNLocator(4))
+        axs[row, col].yaxis.set_ticks([0, 1024, 4096, 16384])
         axs[row, col].set_xlabel("")
         axs[row, col].set_ylabel("")
     
@@ -120,11 +123,11 @@ if __name__ == "__main__":
 
         extracted_keystrokes = ke.isolate_keystrokes(keystroke_boundaries, signal)
         print(f"Extracted Keystrokes: {len(extracted_keystrokes)}")
-        ke.plot_extracted_keystrokes(extracted_keystrokes, samplerate)
+        # ke.plot_extracted_keystrokes(extracted_keystrokes, samplerate)
         
         augmented_keystrokes = signal_data_augmentation(extracted_keystrokes)
         print(f"Augmented Keystrokes: {len(augmented_keystrokes)}")
-        plot_augmented_keystrokes(augmented_keystrokes, samplerate)
+        # plot_augmented_keystrokes(augmented_keystrokes, samplerate)
 
         mel_spectrograms = [generate_mel_spectrogram(keystroke, samplerate, WINDOW_SIZE, HOP_SIZE) for keystroke in augmented_keystrokes]
         print(f"Mel Spectrograms: {len(mel_spectrograms)}")
