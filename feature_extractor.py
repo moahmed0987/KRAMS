@@ -3,12 +3,12 @@ from random import random
 
 import librosa
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import numpy as np
 import torch
 import torchaudio.transforms as T
 
 import keystroke_extractor as ke
-import matplotlib.ticker as ticker
 
 
 def signal_data_augmentation(signals):
