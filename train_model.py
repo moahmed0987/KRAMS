@@ -89,7 +89,7 @@ def run():
 
     num_blocks = [2, 2, 12, 28, 2]
     channels = [192, 192, 384, 768, 1536]
-    model = CoAtNet((64, 64), 1, num_blocks, channels, num_classes=26)
+    model = CoAtNet(image_size=(64, 64), in_channels=1, num_blocks=num_blocks, channels=channels, num_classes=26)
 
     optimiser = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
     criterion = torch.nn.CrossEntropyLoss()
