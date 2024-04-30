@@ -28,11 +28,11 @@ class RecordingDataset(Dataset):
     
     # RecordingDataset must be initialised with the dataframe that created the
     # mel_spectrogram due to the randomness of data augmentation
-    def get_id_from_mel_spectrogram(self, mel_spectrogram):
-        for i in range(len(self.df)):
-            if np.array_equal(self.df['mel_spectrogram'].iloc[i], mel_spectrogram):
-                break
-        return self.df.iloc[i]['id']
+    # def get_id_from_mel_spectrogram(self, mel_spectrogram):
+    #     for i in range(len(self.df)):
+    #         if np.array_equal(self.df['mel_spectrogram'].iloc[i], mel_spectrogram):
+    #             break
+    #     return self.df.iloc[i]['id']
     
 
 if __name__ == "__main__":
