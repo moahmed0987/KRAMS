@@ -20,23 +20,6 @@ def signal_data_augmentation(signals):
             augmented_signals.append(np.roll(signal, int(random() * -len(signal) * 0.1)))
     return augmented_signals
 
-def mel_spectrogram_data_augmentation(mel_spectrograms):
-    time_mask = T.TimeMasking(time_mask_param=len(mel_spectrograms[0]) / 10)
-    freq_mask = T.FrequencyMasking(freq_mask_param=len(mel_spectrograms[0]) / 10)
-    augmented_mel_spectrograms = []
-    for mel_spectrogram in mel_spectrograms:
-        augmented_mel_spectrograms.append(mel_spectrogram)
-
-        time_masked = time_mask(torch.tensor(mel_spectrogram))
-        augmented_mel_spectrograms.append(time_masked.numpy())
-
-        freq_masked = freq_mask(torch.tensor(mel_spectrogram))
-        augmented_mel_spectrograms.append(freq_masked.numpy())
-
-        time_freq_masked = freq_mask(time_masked)
-        augmented_mel_spectrograms.append(time_freq_masked.numpy())
-    return augmented_mel_spectrograms
-
 def plot_augmented_keystrokes(extracted_keystrokes, samplerate):
     base = sqrt(len(extracted_keystrokes))
     rows = floor(base)
@@ -104,6 +87,23 @@ def display_mel_spectrograms(mel_spectrograms, samplerate, window_size, hop_size
     fig.supxlabel("Time (s)")
     fig.supylabel("Mels (Hz)")
     plt.show()
+
+def mel_spectrogram_data_augmentation(mel_spectrograms):
+    time_mask = T.TimeMasking(time_mask_param=len(mel_spectrograms[0]) / 10)
+    freq_mask = T.FrequencyMasking(freq_mask_param=len(mel_spectrograms[0]) / 10)
+    augmented_mel_spectrograms = []
+    for mel_spectrogram in mel_spectrograms:
+        augmented_mel_spectrograms.append(mel_spectrogram)
+
+        time_masked = time_mask(torch.tensor(mel_spectrogram))
+        augmented_mel_spectrograms.append(time_masked.numpy())
+
+        freq_masked = freq_mask(torch.tensor(mel_spectrogram))
+        augmented_mel_spectrograms.append(freq_masked.numpy())
+
+        time_freq_masked = freq_mask(time_masked)
+        augmented_mel_spectrograms.append(time_freq_masked.numpy())
+    return augmented_mel_spectrograms
 
 if __name__ == "__main__":
     WINDOW_SIZE = 1023
