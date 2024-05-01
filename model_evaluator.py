@@ -14,12 +14,9 @@ def load_and_prepare_model(model_path, device):
     model = CoAtNet((64, 64), 1, num_blocks, channels, num_classes=26)
 
     if model_path.endswith("model.pth"):
-        model.load_state_dict(torch.load(model_path))
+        model.load_state_dict(torch.load(model_path), map_location=torch.device(device))
     else:
-        try:
-            model_checkpoint = torch.load(model_path)
-        except RuntimeError:
-            model_checkpoint = torch.load(model_path, map_location=torch.device('cpu'))
+        model_checkpoint = torch.load(model_path, map_location=torch.device(device))
 
         model_state = model_checkpoint['model_state_dict']
         model.load_state_dict(model_state)
