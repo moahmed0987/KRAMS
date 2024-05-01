@@ -14,10 +14,6 @@ test_dataset = tmdl.get_test_dataset(DATA_DIR)
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model = me.load_and_prepare_model(os.path.join(CHECKPOINT_DIR, "checkpoint_epoch_130.pth"), device)
-BEFORE = int(0.3 * 14400)
-AFTER = int(0.7 * 14400)
-WINDOW_SIZE = 1023
-HOP_SIZE = 225
 
 print_length = 520
 
