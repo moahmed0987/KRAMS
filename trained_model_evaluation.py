@@ -4,13 +4,16 @@ import model_evaluator as me
 import trained_model_data_loader as tmdl
 from RecordingDataset import RecordingDataset
 
-DATA_DIR = os.path.join("drive", "MyDrive")
+BASE_DIR = os.path.join("drive", "MyDrive", "Results", "20240427130931")
+DATA_DIR = os.path.join(BASE_DIR, "Data")
+MODEL_DIR = os.path.join(BASE_DIR, "Model")
+CHECKPOINT_DIR = os.path.join(BASE_DIR, "Checkpoints")
 
 dataset = tmdl.get_dataset(DATA_DIR)
 test_dataset = tmdl.get_test_dataset(DATA_DIR)
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model = me.load_and_prepare_model(os.path.join(DATA_DIR, "checkpoint_epoch_130.pth"), device)
+model = me.load_and_prepare_model(os.path.join(CHECKPOINT_DIR, "checkpoint_epoch_130.pth"), device)
 BEFORE = int(0.3 * 14400)
 AFTER = int(0.7 * 14400)
 WINDOW_SIZE = 1023
