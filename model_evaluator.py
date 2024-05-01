@@ -14,10 +14,9 @@ def load_and_prepare_model(model_path, device):
     model = CoAtNet((64, 64), 1, num_blocks, channels, num_classes=26)
 
     if model_path.endswith("model.pth"):
-        model.load_state_dict(torch.load(model_path), map_location=torch.device(device))
+        model.load_state_dict(torch.load(model_path, map_location=torch.device(device)))
     else:
         model_checkpoint = torch.load(model_path, map_location=torch.device(device))
-
         model_state = model_checkpoint['model_state_dict']
         model.load_state_dict(model_state)
 
@@ -65,11 +64,15 @@ def predict_keystrokes(model, df_mel_spectrograms, device):
 
 
 def check_accuracy(sample_text, output_text):
+    if len(sample_text) != len(output_text):
+        print("Sample text and output text lengths do not match.")
+        return 0
     correct = 0
     for i in range(len(sample_text)):
         if output_text[i] == sample_text[i]:
             correct += 1
     print("Accuracy:", (correct / len(sample_text)) * 100, "%")
+    return (correct / len(sample_text)) * 100
 
 
 if __name__ == "__main__":
