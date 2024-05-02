@@ -73,12 +73,12 @@ def validation(model, device, validation_loader, criterion):
     print("\nValidation set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n".format(
         validation_loss, correct, len(validation_loader.dataset), accuracy))
 
-    # print("Misclassified samples:")
-    # for data, target, pred in incorrect:
-    #     # print(f"Sample: {data.cpu().squeeze().numpy()}")
-    #     print(f"Target: {target.item()}, Predicted: {pred.item()}")
-    #     print(f"Target label: {validation_loader.dataset.dataset.get_label_from_target(target.item())}, Predicted label: {validation_loader.dataset.dataset.get_label_from_target(pred.item())}")
-    #     print("-" * 20)
+    print("Misclassified samples:")
+    for data, target, pred in incorrect:
+        # print(f"Sample: {data.cpu().squeeze().numpy()}")
+        print(f"Target: {target.item()}, Predicted: {pred.item()}")
+        print(f"Target label: {validation_loader.dataset.dataset.get_label_from_target(target.item())}, Predicted label: {validation_loader.dataset.dataset.get_label_from_target(pred.item())}")
+        print("-" * 20)
 
     return validation_loss
 
