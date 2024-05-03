@@ -46,7 +46,7 @@ def plot_peaks(peaks, energy, signal, window_size, hop_size, samplerate):
 
 min_diff = np.inf
 for i in range(0, 26):
-    FILE_PATH = os.path.join("Recordings", chr(65+i)+".wav")
+    FILE_PATH = os.path.join("PCRecordings", chr(65+i)+".wav")
     WINDOW_SIZE = 1023
     HOP_SIZE = 225
     signal, samplerate = load_recording(FILE_PATH)
