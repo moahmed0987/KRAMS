@@ -13,21 +13,6 @@ import RecordingDataset as RecordingDataset
 import training_data_processor as tdp
 from coatnet import CoAtNet
 
-WINDOW_SIZE = 1023
-HOP_SIZE = 225
-BEFORE = int(0.3 * 14400)
-AFTER = int(0.7 * 14400)
-NUM_EPOCHS = 1100
-EPOCHS_PER_CHECKPOINT = 10
-BATCH_SIZE = 130
-LEARNING_RATE = 0.0005
-RECORDINGS_DIR = os.path.join("Recordings")
-BASE_DIR = os.path.join("Results", datetime.now().strftime("%Y%m%d%H%M%S"))
-CHECKPOINT_DIR = os.path.join(BASE_DIR, "Checkpoints")
-MODEL_DIR = os.path.join(BASE_DIR, "Model")
-FIGURE_DIR = os.path.join(BASE_DIR, "Figures")
-DATA_DIR = os.path.join(BASE_DIR, "Data")
-
 def train(model, device, train_loader, optimiser, criterion, epoch):
     model.train()
     running_loss = 0.0
@@ -82,7 +67,13 @@ def validation(model, device, validation_loader, criterion):
 
     return validation_loss
 
-def run():
+def run(RECORDINGS_DIR, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER, NUM_EPOCHS, EPOCHS_PER_CHECKPOINT, BATCH_SIZE, LEARNING_RATE):
+    BASE_DIR = os.path.join("Results", datetime.now().strftime("%Y%m%d%H%M%S"))
+    CHECKPOINT_DIR = os.path.join(BASE_DIR, "Checkpoints")
+    MODEL_DIR = os.path.join(BASE_DIR, "Model")
+    FIGURE_DIR = os.path.join(BASE_DIR, "Figures")
+    DATA_DIR = os.path.join(BASE_DIR, "Data")
+
     file_paths = tdp.get_file_paths(RECORDINGS_DIR)
     df_relative_paths, df_labels, df_targets, df_mel_spectrograms = tdp.process_recordings(file_paths, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER)
     df = tdp.to_dataframe(df_relative_paths, df_labels, df_targets, df_mel_spectrograms)
@@ -150,5 +141,17 @@ def run():
     np.save(os.path.join(DATA_DIR, "train_indices.npy"), train_dataset.indices)
     np.save(os.path.join(DATA_DIR, "validation_indices.npy"), validation_dataset.indices)
     np.save(os.path.join(DATA_DIR, "test_indices.npy"), test_dataset.indices)
+
+    return BASE_DIR
+
 if __name__ == "__main__":
-    run()
+    WINDOW_SIZE = 1023
+    HOP_SIZE = 225
+    BEFORE = int(0.3 * 14400)
+    AFTER = int(0.7 * 14400)
+    NUM_EPOCHS = 1100
+    EPOCHS_PER_CHECKPOINT = 10
+    BATCH_SIZE = 130
+    LEARNING_RATE = 0.0005
+    RECORDINGS_DIR = os.path.join("Recordings")
+    run(RECORDINGS_DIR, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER, NUM_EPOCHS, EPOCHS_PER_CHECKPOINT, BATCH_SIZE, LEARNING_RATE)
