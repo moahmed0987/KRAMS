@@ -35,6 +35,15 @@ def data_processing_pipeline(file_path, window_size, hop_size, before, after):
     augmented_mel_spectrograms = fe.mel_spectrogram_data_augmentation(mel_spectrograms)
     return augmented_mel_spectrograms
 
+def unaugmented_data_processing_pipeline(file_path, window_size, hop_size, before, after, num_peaks):
+    signal, samplerate = ke.load_recording(file_path)
+    energy = ke.process_keystrokes(signal, window_size, hop_size)
+    peaks = ke.isolate_keystroke_peaks(energy, num_peaks)
+    keystroke_boundaries = ke.find_keystroke_boundaries(peaks, signal, len(energy), before, after)
+    extracted_keystrokes = ke.isolate_keystrokes(keystroke_boundaries, signal)
+    mel_spectrograms = [fe.generate_mel_spectrogram(keystroke, samplerate, window_size, hop_size) for keystroke in extracted_keystrokes]
+    return mel_spectrograms
+
 def to_dataframe(df_relative_paths, df_labels, df_targets, df_mel_spectrograms):
     df = pd.DataFrame(columns=["id", "relative_path", "label", "target", "mel_spectrogram"])
     df["id"] = range(1, len(df_relative_paths) + 1)

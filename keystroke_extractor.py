@@ -40,10 +40,10 @@ def plot_energy(energy, samplerate, window_size, hop_size, signal):
     plt.title("Energy of Keystrokes")
     plt.show()
 
-def isolate_keystroke_peaks(energy):
+def isolate_keystroke_peaks(energy, num_peaks=25):
     for i in [x / 100.0 for x in range(1, 101, 1)]:
         peaks, _ = scipy.signal.find_peaks(energy, prominence=i, distance=100)
-        if len(peaks) == 25:
+        if len(peaks) == num_peaks:
             break
     return peaks
 
