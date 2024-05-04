@@ -3,6 +3,22 @@ import torch
 from coatnet import CoAtNet
 
 
+def load_and_prepare_model(model_path, device):
+    num_blocks = [2, 2, 12, 28, 2]
+    channels = [192, 192, 384, 768, 1536]
+    model = CoAtNet((64, 64), 1, num_blocks, channels, num_classes=26)
+
+    if model_path.endswith("model.pth"):
+        model.load_state_dict(torch.load(model_path, map_location=torch.device(device)))
+    else:
+        model_checkpoint = torch.load(model_path, map_location=torch.device(device))
+        model_state = model_checkpoint['model_state_dict']
+        model.load_state_dict(model_state)
+
+    model.to(device)
+    model.eval()
+    return model
+
 def predict_keystrokes(model, df_mel_spectrograms, device):
     output_labels = []
     with torch.no_grad():
@@ -16,15 +32,3 @@ def predict_keystrokes(model, df_mel_spectrograms, device):
             print(chr(pred.item()+65), end=" ")
         print()
     return output_labels
-
-
-def check_accuracy(target_labels, output_labels):
-    if len(target_labels) != len(output_labels):
-        print("Sample text and output text lengths do not match.")
-        return 0
-    correct = 0
-    for i in range(len(target_labels)):
-        if output_labels[i] == target_labels[i]:
-            correct += 1
-    print("Accuracy:", (correct / len(target_labels)) * 100, "%")
-    return (correct / len(target_labels)) * 100

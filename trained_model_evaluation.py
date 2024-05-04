@@ -1,10 +1,11 @@
-import torch
 import os
+
+import matplotlib.pyplot as plt
+import torch
+
 import model_evaluator as me
 import trained_model_data_loader as tmdl
 from RecordingDataset import RecordingDataset
-from sklearn import metrics
-import matplotlib.pyplot as plt
 
 BASE_DIR = os.path.join("drive", "MyDrive", "Results", "20240427130931")
 DATA_DIR = os.path.join(BASE_DIR, "Data")
@@ -27,12 +28,7 @@ target_labels = [dataset.get_label_from_target(target.item()) for _, target in t
 target_labels = target_labels[:print_length]
 print(target_labels)
 
-me.check_accuracy([letter.upper() for letter in target_labels], [letter.upper() for letter in output_labels])
-
-print(metrics.classification_report(target_labels, output_labels))
-fig, ax = plt.subplots(figsize=(10, 10))
-ax.set_title("Confusion Matrix")
-ax.set_xlabel("Predicted Labels")
-ax.set_ylabel("True Labels")
-cmd = metrics.ConfusionMatrixDisplay.from_predictions(target_labels, output_labels, ax=ax)
+print("Accuracy: ", tmem.check_accuracy([letter.upper() for letter in target_labels], [letter.upper() for letter in output_labels]))
+print("Classification Report: \n", tmem.classification_report(target_labels, output_labels))
+cm = tmem.confusion_matrix(target_labels, output_labels)
 plt.show()

@@ -8,22 +8,6 @@ from coatnet import CoAtNet
 from RecordingDataset import RecordingDataset
 
 
-def load_and_prepare_model(model_path, device):
-    num_blocks = [2, 2, 12, 28, 2]
-    channels = [192, 192, 384, 768, 1536]
-    model = CoAtNet((64, 64), 1, num_blocks, channels, num_classes=26)
-
-    if model_path.endswith("model.pth"):
-        model.load_state_dict(torch.load(model_path, map_location=torch.device(device)))
-    else:
-        model_checkpoint = torch.load(model_path, map_location=torch.device(device))
-        model_state = model_checkpoint['model_state_dict']
-        model.load_state_dict(model_state)
-
-    model.to(device)
-    model.eval()
-    return model
-
 def get_dataset(DATA_DIR):
     dataset = torch.load(os.path.join(DATA_DIR, "dataset.pth"))
     return dataset
