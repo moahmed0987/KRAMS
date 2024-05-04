@@ -1,52 +1,7 @@
-import os
-
-import scipy.signal
 import torch
 
-import feature_extractor as fe
-import keystroke_extractor as ke
 from coatnet import CoAtNet
 
-
-def load_and_prepare_model(model_path, device):
-    num_blocks = [2, 2, 12, 28, 2]
-    channels = [192, 192, 384, 768, 1536]
-    model = CoAtNet((64, 64), 1, num_blocks, channels, num_classes=26)
-
-    if model_path.endswith("model.pth"):
-        model.load_state_dict(torch.load(model_path, map_location=torch.device(device)))
-    else:
-        model_checkpoint = torch.load(model_path, map_location=torch.device(device))
-        model_state = model_checkpoint['model_state_dict']
-        model.load_state_dict(model_state)
-
-    model.to(device)
-    model.eval()
-    return model
-
-# def isolate_keystroke_peaks(energy, num_peaks, signal, samplerate):
-#     for i in [x / 100.0 for x in range(1, 101, 1)]:
-#         peaks, _ = scipy.signal.find_peaks(energy, prominence=i, distance=100)
-#         if len(peaks) == num_peaks:
-#             break
-#     ke.plot_peaks(peaks, energy, signal, WINDOW_SIZE, HOP_SIZE, samplerate)
-#     print(len(peaks))
-#     return peaks
-
-# def extract_keystrokes_and_features(sentence, recording_path, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER):
-#     signal, samplerate = ke.load_recording(recording_path)
-#     energy = ke.process_keystrokes(signal, WINDOW_SIZE, HOP_SIZE)
-#     peaks = isolate_keystroke_peaks(energy, len(sentence), signal, samplerate)
-#     keystroke_boundaries = ke.find_keystroke_boundaries(peaks, signal, len(energy), BEFORE, AFTER)
-#     extracted_keystrokes = ke.isolate_keystrokes(keystroke_boundaries, signal)
-#     mel_spectrograms = [fe.generate_mel_spectrogram(keystroke, samplerate, WINDOW_SIZE, HOP_SIZE) for keystroke in extracted_keystrokes]
-#     df_relative_paths, df_labels, df_targets, df_mel_spectrograms = [],[],[],[]
-#     for i, mel_spectrogram in enumerate(mel_spectrograms):
-#         df_relative_paths.append(recording_path)
-#         df_labels.append(sentence[i])
-#         df_targets.append(ord(sentence[i])-65)
-#         df_mel_spectrograms.append(torch.tensor(mel_spectrogram))
-#     return df_relative_paths, df_labels, df_targets, df_mel_spectrograms
 
 def predict_keystrokes(model, df_mel_spectrograms, device):
     output_labels = []
@@ -73,18 +28,3 @@ def check_accuracy(target_labels, output_labels):
             correct += 1
     print("Accuracy:", (correct / len(target_labels)) * 100, "%")
     return (correct / len(target_labels)) * 100
-
-
-# if __name__ == "__main__":
-#     device = "cuda" if torch.cuda.is_available() else "cpu"
-#     sentence = "ThisIsATestSentenceSample"
-#     recording_path = os.path.join("drive", "MyDrive", "Recordings", "ThisIsATestSentenceSample.wav")
-#     model_path = os.path.join("drive", "MyDrive", "Results", "20240321182511", "Checkpoints", "checkpoint_epoch_610.pth")
-#     BEFORE = int(0.3 * 14400)
-#     AFTER = int(0.7 * 14400)
-#     WINDOW_SIZE = 1023
-#     HOP_SIZE = 225
-#     model = load_and_prepare_model(model_path, device)
-#     df_relative_paths, df_labels, df_targets, df_mel_spectrograms = extract_keystrokes_and_features(sentence, recording_path, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER)
-#     output_text = predict_keystrokes(model, df_mel_spectrograms, device)
-#     check_accuracy(sentence.upper(), output_text.upper())
