@@ -88,7 +88,7 @@ def display_mel_spectrograms(mel_spectrograms, samplerate, window_size, hop_size
     fig.colorbar(mel_show, ax=axs.ravel().tolist(), format="%+2.0f dB")
     fig.suptitle("Mel Spectrograms")
     fig.supxlabel("Time (s)")
-    fig.supylabel("Mels (Hz)")
+    fig.supylabel("Frequency (Hz)")
     plt.show()
 
 def mel_spectrogram_data_augmentation(mel_spectrograms):
