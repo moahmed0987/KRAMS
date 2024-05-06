@@ -1,4 +1,4 @@
-def krasch(training_recordings_dir, attack_recording_path, window_size, hop_size, before, after, num_epochs, epochs_per_checkpoint, batch_size, learning_rate, device, num_peaks):
+def krams(training_recordings_dir, attack_recording_path, window_size, hop_size, before, after, num_epochs, epochs_per_checkpoint, batch_size, learning_rate, device, num_peaks):
     import os
 
     import model_evaluator as me
@@ -20,7 +20,7 @@ def krasch(training_recordings_dir, attack_recording_path, window_size, hop_size
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="KRASCH: Keystroke Recovery using Acoustic Side-Channels in Human interface devices")
+    parser = argparse.ArgumentParser(description="KRAMS: Keystroke Recognition using Augmented Mel-Spectrograms")
     parser.add_argument("TRAINING_RECORDINGS_DIR", help="The directory containing the training recordings")
     parser.add_argument("ATTACK_RECORDING_PATH", help="The path to the recording to attack")
     parser.add_argument("N_KEYSTROKES_IN_ATTACK", help="The number of keystrokes in the attack recording", type=int)
@@ -35,4 +35,4 @@ if __name__ == "__main__":
     LEARNING_RATE = 0.0005
     from torch.cuda import is_available
     DEVICE = "cuda" if is_available() else "cpu"
-    krasch(args.TRAINING_RECORDINGS_DIR, args.ATTACK_RECORDING_PATH, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER, NUM_EPOCHS, EPOCHS_PER_CHECKPOINT, BATCH_SIZE, LEARNING_RATE, DEVICE, args.KEYSTROKES_IN_ATTACK)
+    krams(args.TRAINING_RECORDINGS_DIR, args.ATTACK_RECORDING_PATH, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER, NUM_EPOCHS, EPOCHS_PER_CHECKPOINT, BATCH_SIZE, LEARNING_RATE, DEVICE, args.KEYSTROKES_IN_ATTACK)
