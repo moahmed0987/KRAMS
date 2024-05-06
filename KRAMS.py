@@ -20,11 +20,21 @@ def krams(training_recordings_dir, attack_recording_path, window_size, hop_size,
 
 if __name__ == "__main__":
     import argparse
+    import os
     parser = argparse.ArgumentParser(description="KRAMS: Keystroke Recognition using Augmented Mel-Spectrograms")
     parser.add_argument("TRAINING_RECORDINGS_DIR", help="The directory containing the training recordings")
     parser.add_argument("ATTACK_RECORDING_PATH", help="The path to the recording to attack")
     parser.add_argument("N_KEYSTROKES_IN_ATTACK", help="The number of keystrokes in the attack recording", type=int)
     args = parser.parse_args()
+    if not os.path.isdir(args.TRAINING_RECORDINGS_DIR):
+        print("The specified training recordings directory does not exist")
+        exit(1)
+    if not os.path.isfile(args.ATTACK_RECORDING_PATH):
+        print("The specified attack recording does not exist")
+        exit(1)
+    if args.N_KEYSTROKES_IN_ATTACK <= 0:
+        print("The number of keystrokes in the attack recording must be positive")
+        exit(1)
     WINDOW_SIZE = 1023
     HOP_SIZE = 225
     BEFORE = int(0.3 * 14400)
