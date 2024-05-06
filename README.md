@@ -4,6 +4,8 @@ A command-line interface application that uses [SpecAugmented](https://arxiv.org
 
 The application takes a directory containing training recordings, an attack recording, and the number of keystrokes in that recording as input.
 
+The method used is inspired by [this](https://arxiv.org/pdf/2308.01074) paper.
+
 **WARNING**: It is highly recommended to use a GPU to run this application. The training process is computationally expensive and will take a long time on a CPU. Services such as [Google Colab](https://colab.research.google.com/) can be used to run the application on a GPU for free.
 
 ## Installation
