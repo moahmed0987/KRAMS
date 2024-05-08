@@ -3,8 +3,8 @@ import os
 import numpy as np
 import pandas as pd
 
-import feature_extractor as fe
-import keystroke_extractor as ke
+import src.feature_extractor as fe
+import src.keystroke_extractor as ke
 
 def get_file_paths(directory):
     return [os.path.join(directory, chr(65 + i) + ".wav") for i in range(26)]

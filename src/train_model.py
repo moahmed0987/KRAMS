@@ -7,11 +7,10 @@ from matplotlib import pyplot as plt
 from torch.utils.data import random_split
 from tqdm import tqdm
 
-import feature_extractor as fe
-import keystroke_extractor as ke
-import RecordingDataset as RecordingDataset
-import training_data_processor as tdp
-from coatnet import CoAtNet
+import src.training_data_processor as tdp
+from src.coatnet import CoAtNet
+from src.RecordingDataset import RecordingDataset
+
 
 def train(model, device, train_loader, optimiser, criterion, epoch):
     model.train()
@@ -92,7 +91,7 @@ def run(RECORDINGS_DIR, WINDOW_SIZE, HOP_SIZE, BEFORE, AFTER, NUM_EPOCHS, EPOCHS
     validation_loader = torch.utils.data.DataLoader(validation_dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.to(device)
+    # model.to(device)
 
     train_losses = []
     validation_losses = []

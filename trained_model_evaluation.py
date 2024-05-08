@@ -3,10 +3,10 @@ import os
 import matplotlib.pyplot as plt
 import torch
 
-import model_evaluator as me
-import trained_model_data_loader as tmdl
-import trained_model_evaluation_metrics as tmem
-from RecordingDataset import RecordingDataset
+import src.model_evaluator as me
+import src.trained_model_data_loader as tmdl
+import src.trained_model_evaluation_metrics as tmem
+from src.RecordingDataset import RecordingDataset
 
 BASE_DIR = os.path.join("drive", "MyDrive", "Results", "20240427130931")
 DATA_DIR = os.path.join(BASE_DIR, "Data")

@@ -1,6 +1,6 @@
 import torch
 
-from coatnet import CoAtNet
+from src.coatnet import CoAtNet
 
 
 def load_and_prepare_model(model_path, device):

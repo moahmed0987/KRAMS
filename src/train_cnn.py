@@ -6,9 +6,9 @@ import torch
 from matplotlib import pyplot as plt
 from torch.utils.data import Subset
 
-import training_data_processor as tdp
-from cnn import ConvNet
-from RecordingDataset import RecordingDataset
+import src.training_data_processor as tdp
+from src.cnn import ConvNet
+from src.RecordingDataset import RecordingDataset
 
 WINDOW_SIZE = 1023
 HOP_SIZE = 225

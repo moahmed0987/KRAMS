@@ -4,8 +4,8 @@ import numpy as np
 import torch
 from torch.utils.data import Subset
 
-from coatnet import CoAtNet
-from RecordingDataset import RecordingDataset
+from src.coatnet import CoAtNet
+from src.RecordingDataset import RecordingDataset
 
 
 def get_dataset(DATA_DIR):

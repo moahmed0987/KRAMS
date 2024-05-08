@@ -1,9 +1,14 @@
 import os
+import sys
 
 import soundfile
 
-import keystroke_extractor as ke
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+
 import random
+
+import src.keystroke_extractor as ke
+
 
 def create_recording(sentence, destination, recordings_dir):
     final_signal = []
@@ -33,6 +38,6 @@ if __name__ == "__main__":
     HOP_SIZE = 225
     BEFORE = int(0.2 * 14400)
     AFTER = int(0.8 * 14400)
-    RECORDINGS_DIR = "PCRecordings"
+    RECORDINGS_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "PCRecordings")
     sentence = "TheQuickBrownFoxJumpsOverTheLazyDog"
     create_recording(sentence, os.path.join("Recordings", sentence + ".wav"), RECORDINGS_DIR)

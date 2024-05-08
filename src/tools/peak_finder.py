@@ -1,10 +1,15 @@
 import os
+import sys
+
 import librosa
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.signal
 from scipy.fft import fft
-import keystroke_extractor as ke
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+import src.keystroke_extractor as ke
+
 
 def isolate_keystroke_peaks(energy, num_peaks=25):
     for i in [x / 100.0 for x in range(1, 101, 1)]:

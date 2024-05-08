@@ -1,11 +1,11 @@
 def krams(training_recordings_dir, attack_recording_path, window_size, hop_size, before, after, num_epochs, epochs_per_checkpoint, batch_size, learning_rate, device, num_peaks):
     import os
 
-    import model_evaluator as me
-    import train_model as tm
-    import training_data_processor as tdp
-    from coatnet import CoAtNet
-    base_dir = tm.run(training_recordings_dir, window_size, hop_size, before, after, num_epochs, epochs_per_checkpoint, batch_size, learning_rate, device)
+    import src.model_evaluator as me
+    import src.train_model as tm
+    import src.training_data_processor as tdp
+    from src.coatnet import CoAtNet
+    base_dir = tm.run(training_recordings_dir, window_size, hop_size, before, after, num_epochs, epochs_per_checkpoint, batch_size, learning_rate)
     checkpoint_dir = os.path.join(base_dir, "Checkpoints")
     model_dir = os.path.join(base_dir, "Model")
     model_path = os.path.join(model_dir, "model.pth")

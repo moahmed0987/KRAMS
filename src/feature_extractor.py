@@ -8,7 +8,7 @@ import numpy as np
 import torch
 import torchaudio.transforms as T
 
-import keystroke_extractor as ke
+import src.keystroke_extractor as ke
 
 
 def signal_data_augmentation(signals):

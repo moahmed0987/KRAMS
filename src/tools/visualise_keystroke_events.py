@@ -12,7 +12,7 @@ def load_recording(file_path):
     return signal, samplerate
 
 def plot_waveform(signal, samplerate):
-    plt.figure(figsize=(10, 4))  # Set the figure size
+    plt.figure(figsize=(10, 4))
     librosa.display.waveshow(signal, sr=samplerate, color="#1f77b4", axis="s")
     plt.title("Waveform of Recording")
     plt.ylabel("Amplitude")
