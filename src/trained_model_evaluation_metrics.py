@@ -16,7 +16,7 @@ def check_accuracy(target_labels, output_labels):
 def classification_report(target_labels, output_labels):
     return metrics.classification_report(target_labels, output_labels)
 
-def confusion_matrix(target_labels, output_labels, confusion_matrix_title):
+def confusion_matrix(target_labels, output_labels, confusion_matrix_title="Confusion Matrix"):
     fig, ax = plt.subplots(figsize=(10, 10))
     ax.set_title(confusion_matrix_title)
     ax.set_xlabel("Predicted Labels")
