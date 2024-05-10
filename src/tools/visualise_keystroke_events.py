@@ -172,8 +172,8 @@ def mel_spectrogram_data_augmentation(mel_spectrograms):
 if __name__ == "__main__":
     WINDOW_SIZE = 1023
     HOP_SIZE = 225
-    BEFORE = int(0.3 * 14400)
-    AFTER = int(0.7 * 14400)
+    BEFORE = int(0.2 * 14400)
+    AFTER = int(0.8 * 14400)
     RECORDING_DIR = "Recordings"
     FILE_PATH = os.path.join(RECORDING_DIR, "A.wav")
     signal, samplerate = load_recording(FILE_PATH)
@@ -187,7 +187,7 @@ if __name__ == "__main__":
     plt.figure()
     librosa.display.waveshow(to_plot, sr=samplerate, color="#1f77b4", max_points=1000)
     plt.xlabel("Time (seconds)")
-    plt.ylabel("Amplitude")
+    plt.ylabel("Amplitude (a.u.)")
     plt.title("Keystroke 23")
     # vertical lines
     plt.axvline(x=0.04, color="g", linestyle="-", linewidth=0.5, label="\"Press\"")
